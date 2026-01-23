@@ -13,6 +13,7 @@ enum Month {
     November,
     December,
 }
+
 struct Date {
     year: i16,
     month: Month,
@@ -31,14 +32,40 @@ struct MonthDay {
     day: u8,
 }
 
+#[derive(Debug)]
+struct Category {
+    primary: String,
+    secondary: Option<String>,
+}
+
+impl Category {
+    fn new(primary: &str, secondary: &str) -> Self {
+        Self {
+            primary: primary.to_string(),
+            secondary: Some(secondary.to_string()),
+        }
+    }
+    fn from_primary(primary: &str) -> Self {
+        Self {
+            primary: primary.to_string(),
+            secondary: None,
+        }
+    }
+}
+
 struct Event {
     date: Date,
     description: String,
+    category: Category,
 }
 
 impl Event {
-    fn new(date: Date, description: String) -> Self {
-        Event { date, description }
+    fn new(date: Date, description: String, category: Category) -> Self {
+        Event {
+            date,
+            description,
+            category,
+        }
     }
 
     fn month_day(&self) -> MonthDay {
@@ -52,36 +79,53 @@ impl Event {
 fn main() {
     let events = [
         Event::new(
+            Date::new(2025, Month::December, 11),
+            String::from("Rust 1.92.0 released"),
+            Category::new("programming", "rust"),
+        ),
+        Event::new(
             Date::new(1996, Month::January, 23),
             String::from("JDK 1.0 released"),
+            Category::new("programming", "java"),
         ),
         Event::new(
             Date::new(2008, Month::December, 3),
             String::from("Python 3.0 released"),
+            Category::new("programming", "python"),
         ),
         Event::new(
             Date::new(2015, Month::May, 15),
             String::from("Rust 1.0.0 released"),
+            Category::new("programming", "rust"),
         ),
         Event::new(
             Date::new(2025, Month::September, 16),
             String::from("Java 25 released"),
+            Category::new("programming", "java"),
         ),
         Event::new(
             Date::new(2025, Month::October, 7),
             String::from("Python 3.14 released"),
+            Category::new("programming", "python"),
         ),
         Event::new(
             Date::new(2025, Month::December, 11),
             String::from("Rust 1.92.0 released"),
+            Category::new("programming", "rust"),
         ),
     ];
 
-    let month_day = MonthDay { month: Month::May, day: 15 };
+    let month_day = MonthDay {
+        month: Month::May,
+        day: 15,
+    };
     let mut any_luck = false; // Boolean flag
     for event in events {
         if event.month_day() == month_day {
-            println!("{}: {}", event.date.year, event.description);
+            println!(
+                "{}: {} ({:#?})",
+                event.date.year, event.description, event.category
+            );
             any_luck = true;
         }
     }
