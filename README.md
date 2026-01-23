@@ -17,9 +17,9 @@ Tämän kerran kehittelyt ohjelmaan löytyvät hakemistosta `02/events`.
 
 ## 03 Funktiot, struct, enum, match, Option
 
-Käytiin läpi tietuetyypit (`struct`), luetelmatyypit (`enum`) ja
+Käytiin läpi funktiot (`fn`), tietuetyypit (`struct`), luetelmatyypit (`enum`) ja
 optionaaliset tyypit (`Option<T>`). Päivitettiin events-ohjelma
-käyttämään näitä tyyppejä (liittyen kotitehtävään 2, jossa on
+käyttämään näitä tyyppejä (liittyen kotitehtävään 3, jossa on
 myös lisäosio liittyen tapahtumien hakemiseen).
 
 Tämän kerran kehittelyt ohjelmaan löytyvät hakemistosta `03/events`.
