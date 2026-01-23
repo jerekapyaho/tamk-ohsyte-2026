@@ -17,4 +17,13 @@ Tämän kerran kehittelyt ohjelmaan löytyvät hakemistosta `02/events`.
 
 ## 03 Funktiot, struct, enum, match, Option
 
-TBD
+Käytiin läpi tietuetyypit (`struct`), luetelmatyypit (`enum`) ja
+optionaaliset tyypit (`Option<T>`). Päivitettiin events-ohjelma
+käyttämään näitä tyyppejä (liittyen kotitehtävään 2, jossa on
+myös lisäosio liittyen tapahtumien hakemiseen).
+
+Tämän kerran kehittelyt ohjelmaan löytyvät hakemistosta `03/events`.
+
+Jos kirjan PDF:stä kopioidun lähdekoodin sisennykset menevät
+ihan sekaisin, voit muotoilla sen uudelleen komennolla `cargo fmt`
+(lisätietoja komennolla `cargo help fmt`).
