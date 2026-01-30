@@ -27,3 +27,16 @@ Tämän kerran kehittelyt ohjelmaan löytyvät hakemistosta `03/events`.
 Jos kirjan PDF:stä kopioidun lähdekoodin sisennykset menevät
 ihan sekaisin, voit muotoilla sen uudelleen komennolla `cargo fmt`
 (lisätietoja komennolla `cargo help fmt`).
+
+## 04 Vektorit, komentoriviparametrit, virheenkäsittely, piirteet, pakkaukset
+
+Vaihdettiin tapahtumia sisältävä taulukko vektoriin. Luettiin tapahtumien suodattamiseen 
+käytettävä päivämäärä komentoriviparametrista.
+
+Tutkittiin miten käsitellään virhetilanne `Result`-tyypin avulla.
+
+Tutustuttiin tarkemmin piirteisiin (traits).
+
+Opeteltiin käyttämään Rustin pakkauksia (crates), jotka Cargo lataa crates.io-palvelusta.
+
+Tämän kerran kehittelyt ohjelmaan löytyvät hakemistosta `04/events`.
