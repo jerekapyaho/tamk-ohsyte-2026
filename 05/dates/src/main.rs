@@ -21,7 +21,6 @@ impl Month {
     fn from_i32(number: i32) -> Self {
         match number {
             1 => Month::January,
-
             2 => Month::February,
             3 => Month::March,
             4 => Month::April,
@@ -38,6 +37,7 @@ impl Month {
     }
 }
 
+#[derive(Debug, PartialEq)]
 pub struct Date {
     year: i16,
     month: Month,
@@ -99,4 +99,32 @@ fn main() {
         total_count,
         random_dates.len()
     );
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{Date, Month};
+    #[test]
+    fn rejects_invalid_date() {
+        assert_eq!(Date::new(2026, Month::February, 30), None);
+    }
+    #[test]
+    fn accepts_valid_date() {
+        assert_eq!(
+            Date::new(2026, Month::January, 26),
+            Some(Date {
+                year: 2026,
+                month: Month::January,
+                day: 26
+            })
+        )
+    }
+    #[test]
+    fn is_leap_year() {
+        assert_eq!(Date::is_leap_year(2024), true);
+    }
+    #[test]
+    fn is_not_leap_year() {
+        assert_eq!(Date::is_leap_year(2026), false);
+    }
 }
