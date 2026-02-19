@@ -1,13 +1,15 @@
 use std::error::Error;
 
 mod birthday;
+mod events;
 
+use chrono::NaiveDate;
 use birthday::handle_birthday;
+use events::{Event, Category};
 
 pub fn run() -> Result<(), Box<dyn Error>> {
     handle_birthday();
-    
-        /*
+
     let mut events: Vec<Event> = Vec::new();
     events.push(Event::new_singular(
         NaiveDate::from_ymd_opt(2025, 12, 11).unwrap(),
@@ -22,7 +24,6 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     for event in events {
         println!("{}: {}", event.year(), event.description);
     }
-    */
 
     Ok(())
 }
