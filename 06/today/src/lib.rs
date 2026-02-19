@@ -2,10 +2,12 @@ use std::error::Error;
 
 mod birthday;
 mod events;
+mod providers;
 
 use birthday::handle_birthday;
 use chrono::{Datelike, Local, NaiveDate};
 use events::{Category, Event, MonthDay};
+use providers::{EventProvider, SimpleProvider};
 
 pub fn run() -> Result<(), Box<dyn Error>> {
     handle_birthday();
@@ -24,12 +26,10 @@ pub fn run() -> Result<(), Box<dyn Error>> {
 
     let today: NaiveDate = Local::now().date_naive();
     let today_month_day = MonthDay::new(today.month(), today.day());
-    let test_event = Event::new_singular(
-        today,
-        String::from("Test event for today"),
-        Category::from_primary("test"),
-    );
-    events.push(test_event);
+
+    let simple_provider = SimpleProvider::new("simppeli");
+    simple_provider.get_events(&mut events);
+
     for event in events {
         if today_month_day == event.month_day() {
             println!("{}", event);
