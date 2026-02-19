@@ -1,5 +1,5 @@
+use chrono::{Datelike, Local, NaiveDate};
 use std::env;
-use chrono::{Local, NaiveDate, Datelike};
 
 pub fn handle_birthday() {
     const NAME: &str = "BIRTHDATE";
@@ -10,7 +10,7 @@ pub fn handle_birthday() {
         return;
     }
 
-    let value = value.unwrap();  // we know it's there
+    let value = value.unwrap(); // we know it's there
 
     // Try to parse the BIRTHDATE variable as an ISO 8601 date
     // into a NaiveDate. If that succeeds, compare the month and
@@ -34,10 +34,13 @@ pub fn handle_birthday() {
             let message = make_message(day_count);
             result.push_str(&message);
             println!("{}", result);
-        },
+        }
         Err(_) => {
-            eprintln!("Error in the '{}' environment variable: \
-                '{}' is not a valid date.", NAME, value);
+            eprintln!(
+                "Error in the '{}' environment variable: \
+                '{}' is not a valid date.",
+                NAME, value
+            );
         }
     }
 }
@@ -53,7 +56,8 @@ fn make_message(day_count: i64) -> String {
         }
     } else if day_count < 0 {
         message.push_str("Are you from the future?");
-    } else {  // must be zero
+    } else {
+        // must be zero
         message.push_str("Looks like you're new here.");
     }
 
@@ -66,29 +70,24 @@ mod tests {
 
     #[test]
     fn make_message_normal() {
-        assert_eq!(
-            make_message(12345_i64), 
-            "You are 12345 days old.");
+        assert_eq!(make_message(12345_i64), "You are 12345 days old.");
     }
 
     #[test]
     fn make_message_normal_nice() {
         assert_eq!(
-            make_message(10000_i64), 
-            "You are 10000 days old. That's a nice, round number!");
+            make_message(10000_i64),
+            "You are 10000 days old. That's a nice, round number!"
+        );
     }
 
     #[test]
     fn make_message_newborn() {
-        assert_eq!(
-            make_message(0),
-            "Looks like you're new here.");
+        assert_eq!(make_message(0), "Looks like you're new here.");
     }
 
     #[test]
     fn make_message_future() {
-        assert_eq!(
-            make_message(-1),
-            "Are you from the future?");
+        assert_eq!(make_message(-1), "Are you from the future?");
     }
 }

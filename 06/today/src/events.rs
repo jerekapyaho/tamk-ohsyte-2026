@@ -1,3 +1,5 @@
+use std::fmt;
+
 use chrono::{Datelike, NaiveDate};
 
 #[derive(Debug)]
@@ -37,6 +39,18 @@ impl Event {
     }
 }
 
+impl fmt::Display for Event {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "{}: {} ({})",
+            self.year(),
+            self.description,
+            self.category
+        )
+    }
+}
+
 #[derive(Debug, PartialEq)]
 pub struct MonthDay {
     month: u32,
@@ -44,10 +58,11 @@ pub struct MonthDay {
 }
 
 impl MonthDay {
-    fn new(month: u32, day: u32) -> Self {
+    pub fn new(month: u32, day: u32) -> Self {
         Self { month, day }
     }
-    fn from_str(s: &str) -> Self {
+
+    pub fn from_str(s: &str) -> Self {
         assert!(s.len() == 4);
         let month_string = &s[..2];
         let month = month_string.parse().unwrap();
@@ -74,6 +89,15 @@ impl Category {
         Self {
             primary: primary.to_string(),
             secondary: None,
+        }
+    }
+}
+
+impl fmt::Display for Category {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match &self.secondary {
+            Some(sec) => write!(f, "{}/{}", self.primary, sec),
+            None => write!(f, "{}", self.primary),
         }
     }
 }

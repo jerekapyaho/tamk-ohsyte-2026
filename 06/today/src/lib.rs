@@ -3,9 +3,9 @@ use std::error::Error;
 mod birthday;
 mod events;
 
-use chrono::NaiveDate;
 use birthday::handle_birthday;
-use events::{Event, Category};
+use chrono::{Datelike, Local, NaiveDate};
+use events::{Category, Event, MonthDay};
 
 pub fn run() -> Result<(), Box<dyn Error>> {
     handle_birthday();
@@ -21,8 +21,19 @@ pub fn run() -> Result<(), Box<dyn Error>> {
         String::from("Rust 1.0.0 released"),
         Category::new("programming", "rust"),
     ));
+
+    let today: NaiveDate = Local::now().date_naive();
+    let today_month_day = MonthDay::new(today.month(), today.day());
+    let test_event = Event::new_singular(
+        today,
+        String::from("Test event for today"),
+        Category::from_primary("test"),
+    );
+    events.push(test_event);
     for event in events {
-        println!("{}: {}", event.year(), event.description);
+        if today_month_day == event.month_day() {
+            println!("{}", event);
+        }
     }
 
     Ok(())
