@@ -40,3 +40,14 @@ Tutustuttiin tarkemmin piirteisiin (traits).
 Opeteltiin käyttämään Rustin pakkauksia (crates), jotka Cargo lataa crates.io-palvelusta.
 
 Tämän kerran kehittelyt ohjelmaan löytyvät hakemistosta `04/events`.
+
+## 05 Yksikkötestit, omistajuus, viittaukset ja lainaaminen
+
+Käsiteltiin Rustin ominaispiirteitä: arvon omistajuus, viitteet arvoihin sekä
+arvon "lainaaminen" viitteiden avulla.
+
+Lisäksi opeteltiin tekemään yksikkötestejä käyttämällä cfg-asetusattribuuttia
+sekä test-merkittyjä funktioita.
+
+Tämän kerran kehittelyt löytyvät hakemistosta `05/dates`, jossa on malleja
+yksikkötesteistä ohjelman tietotyypeille.
