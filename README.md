@@ -51,3 +51,12 @@ sekä test-merkittyjä funktioita.
 
 Tämän kerran kehittelyt löytyvät hakemistosta `05/dates`, jossa on malleja
 yksikkötesteistä ohjelman tietotyypeille.
+
+## 06 Moduulit, tapahtumatuottaja / piirteen toteuttaminen
+
+Tutkittiin miten ohjelmakoodi jaetaan moduuleihin.
+
+Tehtiin piirre eli trait, jonka kaikki tapahtumantuottajat
+toteuttavat. 
+
+Today-ohjelman perusta löytyy hakemistosta `06/today`.
