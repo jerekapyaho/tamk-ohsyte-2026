@@ -60,3 +60,14 @@ Tehtiin piirre eli trait, jonka kaikki tapahtumantuottajat
 toteuttavat. 
 
 Today-ohjelman perusta löytyy hakemistosta `06/today`.
+
+## 07 Ohjelman konfiguraatiotiedosto
+
+Tutkittiin mihin ohjelman asetustiedosto pitäisi laittaa.
+Tehtiin TOML-muotoinen asetustiedosto ja lisättiin siihen
+tiedot ohjelman käyttämistä tapahtumatuottajista.
+
+Viikon kehittelyt löytyvät hakemistosta `07`. Ohjelma `configdirs`
+kaivelee esille asetustiedostojen oikeat hakemistot
+eri käyttöjärjestelmissä (Windows, Linux, macOS). Tästä
+saadaan myös uusia osia Today-ohjelmaan.
