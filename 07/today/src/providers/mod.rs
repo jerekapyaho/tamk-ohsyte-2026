@@ -1,6 +1,7 @@
 use crate::events::{Category, Event};
 use chrono::{Local, NaiveDate};
 
+pub mod textfile;
 pub mod csvfile;
 
 pub trait EventProvider {

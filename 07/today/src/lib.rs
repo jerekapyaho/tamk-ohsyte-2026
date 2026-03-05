@@ -7,36 +7,74 @@ pub mod providers;
 
 use birthday::handle_birthday;
 use chrono::{Datelike, Local, NaiveDate};
+use serde::Deserialize;
+
 use events::{Category, Event, MonthDay};
 use providers::{EventProvider, SimpleProvider};
-use crate::providers::csvfile::CSVFileProvider;
+use crate::providers::{
+    csvfile::CSVFileProvider,
+    textfile::TextFileProvider
+};
 
-pub fn run() -> Result<(), Box<dyn Error>> {
+#[derive(Deserialize, Debug)]
+pub struct ProviderConfig {
+    pub name: String,
+    kind: String,
+    resource: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Config {
+    pub providers: Vec::<ProviderConfig>,
+}
+
+fn create_providers(config: &Config, config_path: &Path) -> Vec::<Box<dyn EventProvider>> {
+    // Try to create all the event providers specified in `config`.
+    // Put them in a vector of trait objects.
+    let mut providers: Vec::<Box<dyn EventProvider>> = Vec::new();
+    for cfg in config.providers.iter() {
+        let path = config_path.join(&cfg.resource);
+        match cfg.kind.as_str() {
+            "text" => {
+                let provider = TextFileProvider::new(&cfg.name, &path);
+                providers.push(Box::new(provider));
+            },
+            "csv" => {
+                let provider = CSVFileProvider::new(&cfg.name, &path);
+                providers.push(Box::new(provider));
+            },
+            _ => {
+                eprintln!("Unable to make provider: {:?}", cfg);
+            }
+        }
+    }
+
+    let test_provider = SimpleProvider::new("test");
+    providers.push(Box::new(test_provider));
+
+    providers
+}
+
+pub fn run(config: &Config, config_path: &Path) -> Result<(), Box<dyn Error>> {
     handle_birthday();
 
     let mut events: Vec<Event> = Vec::new();
-    events.push(Event::new_singular(
-        NaiveDate::from_ymd_opt(2025, 12, 11).unwrap(),
-        String::from("Rust 1.92.0 released"),
-        Category::new("programming", "rust"),
-    ));
-    events.push(Event::new_singular(
-        NaiveDate::from_ymd_opt(2015, 5, 15).unwrap(),
-        String::from("Rust 1.0.0 released"),
-        Category::new("programming", "rust"),
-    ));
 
     let today: NaiveDate = Local::now().date_naive();
     let today_month_day = MonthDay::new(today.month(), today.day());
 
-    let simple_provider = SimpleProvider::new("simppeli");
-    simple_provider.get_events(&mut events);
+    let providers = create_providers(config, config_path);
 
-    // Create an instance of the new CSVFileProvider
-    // and use it to get any events it has to provide.
-    // We supply both the name and the path to the text file.
-    let csv_file_provider = CSVFileProvider::new("compsci", Path::new("compsci.csv"));
-    csv_file_provider.get_events(&mut events);
+    let mut count = 0;
+    for provider in providers {
+        provider.get_events(&mut events);  // polymorphism!
+        let new_count = events.len();
+        println!(
+            "Got {} events from provider '{}'", 
+            new_count - count,
+            provider.name());
+        count = new_count;
+    }
 
     for event in events {
         if today_month_day == event.month_day() {
