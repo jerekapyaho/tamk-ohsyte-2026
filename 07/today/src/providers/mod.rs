@@ -1,5 +1,7 @@
-use chrono::{NaiveDate, Local};
-use crate::events::{Event, Category};
+use crate::events::{Category, Event};
+use chrono::{Local, NaiveDate};
+
+pub mod csvfile;
 
 pub trait EventProvider {
     fn name(&self) -> String;
@@ -12,7 +14,9 @@ pub struct SimpleProvider {
 
 impl SimpleProvider {
     pub fn new(name: &str) -> Self {
-        Self { name: name.to_string() }
+        Self {
+            name: name.to_string(),
+        }
     }
 }
 
@@ -27,14 +31,14 @@ impl EventProvider for SimpleProvider {
         let test_event_1 = Event::new_singular(
             today,
             String::from("Test event 1 for today"),
-            Category::from_primary("test")
+            Category::from_primary("test"),
         );
         events.push(test_event_1);
 
         let test_event_2 = Event::new_singular(
             today,
             String::from("Test event 2 for today"),
-            Category::from_primary("test")
+            Category::from_primary("test"),
         );
         events.push(test_event_2);
     }

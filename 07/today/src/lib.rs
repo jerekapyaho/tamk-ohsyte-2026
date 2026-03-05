@@ -1,13 +1,15 @@
 use std::error::Error;
+use std::path::Path;
 
-mod birthday;
-mod events;
-mod providers;
+pub mod birthday;
+pub mod events;
+pub mod providers;
 
 use birthday::handle_birthday;
 use chrono::{Datelike, Local, NaiveDate};
 use events::{Category, Event, MonthDay};
 use providers::{EventProvider, SimpleProvider};
+use crate::providers::csvfile::CSVFileProvider;
 
 pub fn run() -> Result<(), Box<dyn Error>> {
     handle_birthday();
@@ -29,6 +31,12 @@ pub fn run() -> Result<(), Box<dyn Error>> {
 
     let simple_provider = SimpleProvider::new("simppeli");
     simple_provider.get_events(&mut events);
+
+    // Create an instance of the new CSVFileProvider
+    // and use it to get any events it has to provide.
+    // We supply both the name and the path to the text file.
+    let csv_file_provider = CSVFileProvider::new("compsci", Path::new("compsci.csv"));
+    csv_file_provider.get_events(&mut events);
 
     for event in events {
         if today_month_day == event.month_day() {
