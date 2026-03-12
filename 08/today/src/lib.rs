@@ -14,7 +14,8 @@ use providers::{EventProvider, SimpleProvider};
 use crate::providers::{
     csvfile::CSVFileProvider,
     textfile::TextFileProvider,
-    sqlite::SQLiteProvider
+    sqlite::SQLiteProvider,
+    web::WebProvider
 };
 
 #[derive(Deserialize, Debug)]
@@ -46,6 +47,10 @@ fn create_providers(config: &Config, config_path: &Path) -> Vec::<Box<dyn EventP
             },
             "sqlite" => {
                 let provider = SQLiteProvider::new(&cfg.name, &path);
+                providers.push(Box::new(provider));
+            },
+            "web" => {
+                let provider = WebProvider::new(&cfg.name, &cfg.resource);
                 providers.push(Box::new(provider));
             },
             _ => {
@@ -82,12 +87,9 @@ pub fn run(config: &Config, config_path: &Path) -> Result<(), Box<dyn Error>> {
     }
 
     for event in events {
-        /*
         if today_month_day == event.month_day() {
             println!("{}", event);
         }
-         */
-        println!("{}", event);
     }
 
     Ok(())
