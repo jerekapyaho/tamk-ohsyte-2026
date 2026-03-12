@@ -13,7 +13,8 @@ use events::{Category, Event, MonthDay};
 use providers::{EventProvider, SimpleProvider};
 use crate::providers::{
     csvfile::CSVFileProvider,
-    textfile::TextFileProvider
+    textfile::TextFileProvider,
+    sqlite::SQLiteProvider
 };
 
 #[derive(Deserialize, Debug)]
@@ -41,6 +42,10 @@ fn create_providers(config: &Config, config_path: &Path) -> Vec::<Box<dyn EventP
             },
             "csv" => {
                 let provider = CSVFileProvider::new(&cfg.name, &path);
+                providers.push(Box::new(provider));
+            },
+            "sqlite" => {
+                let provider = SQLiteProvider::new(&cfg.name, &path);
                 providers.push(Box::new(provider));
             },
             _ => {
@@ -77,9 +82,12 @@ pub fn run(config: &Config, config_path: &Path) -> Result<(), Box<dyn Error>> {
     }
 
     for event in events {
+        /*
         if today_month_day == event.month_day() {
             println!("{}", event);
         }
+         */
+        println!("{}", event);
     }
 
     Ok(())

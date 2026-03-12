@@ -71,7 +71,7 @@ impl MonthDay {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Category {
     primary: String,
     secondary: Option<String>,
