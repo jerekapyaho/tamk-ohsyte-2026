@@ -71,3 +71,14 @@ Viikon kehittelyt löytyvät hakemistosta `07`. Ohjelma `configdirs`
 kaivelee esille asetustiedostojen oikeat hakemistot
 eri käyttöjärjestelmissä (Windows, Linux, macOS). Tästä
 saadaan myös uusia osia Today-ohjelmaan.
+
+## 08 Tapahtumien lukeminen SQLite-tietokannasta
+
+Tehtiin tietokanta SQLite-ohjelmalla. Tehtiin uusi tapahtumatuottaja,
+joka lukee tapahtumat tästä tietokannasta. Tietokanta sijoitettiin
+asetustiedostojen hakemistoon, ja lisättiin sen tiedot asetustiedostoon, jotta
+Today-ohjelma poimisi sen mukaan muiden tapahtumalähteiden joukkoon.
+
+Kehittelyt löytyvät hakemistosta `08`. Kotitehtävässä 8 on tarkoitus
+täydentää ratkaisu niin, että tietokantaan lisätyt tapahtumat tulevat
+mukaan ohjelman listaukseen.
