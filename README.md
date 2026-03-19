@@ -82,3 +82,11 @@ Today-ohjelma poimisi sen mukaan muiden tapahtumalähteiden joukkoon.
 Kehittelyt löytyvät hakemistosta `08`. Kotitehtävässä 8 on tarkoitus
 täydentää ratkaisu niin, että tietokantaan lisätyt tapahtumat tulevat
 mukaan ohjelman listaukseen.
+
+## 09 Tapahtumien suodattaminen
+
+Rakennettin suodatin sekä Builder-suunnittelumallin mukainen rakentaja
+sen tekemiseen.
+
+Kehittelyt löytyvät hakemistosta `09`. Kotitehtävässä 9 toteutetaan
+suodatin, mahdollisesti kuitenkin jollain muulla tavalla kuin tässä esitetyllä.
