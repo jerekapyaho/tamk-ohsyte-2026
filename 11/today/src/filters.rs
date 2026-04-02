@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::events::{Event, MonthDay, Category};
+use crate::events::{Category, Event, MonthDay};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum FilterOption {
@@ -29,15 +29,9 @@ impl EventFilter {
 
         for option in self.options.iter() {
             let result = match option {
-                FilterOption::MonthDay(month_day) => {
-                    *month_day == event.month_day()
-                },
-                FilterOption::Category(category) => {
-                    *category == event.category()
-                },
-                FilterOption::Text(text) => {
-                    event.description().contains(text)
-                }
+                FilterOption::MonthDay(month_day) => *month_day == event.month_day(),
+                FilterOption::Category(category) => *category == event.category(),
+                FilterOption::Text(text) => event.description().contains(text),
             };
             results.push(result);
         }

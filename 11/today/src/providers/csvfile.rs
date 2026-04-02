@@ -1,11 +1,11 @@
-use crate::events::{Category, Event};
 use crate::EventProvider;
-use chrono::{NaiveDate, Local, Datelike};
+use crate::events::{Category, Event, Rule};
+use chrono::{Datelike, Local, NaiveDate};
 use csv::ReaderBuilder;
 use std::path::{Path, PathBuf};
 
-use crate::filters::EventFilter;
 use crate::MonthDay;
+use crate::filters::EventFilter;
 
 pub struct CSVFileProvider {
     name: String,
@@ -24,7 +24,7 @@ impl EventProvider for CSVFileProvider {
     fn name(&self) -> String {
         self.name.clone()
     }
-    
+
     fn get_events(&self, filter: &EventFilter, events: &mut Vec<Event>) {
         let mut reader = ReaderBuilder::new()
             .has_headers(false)
@@ -35,6 +35,22 @@ impl EventProvider for CSVFileProvider {
             let mut date_string = record[0].to_string();
             let description = record[1].to_string();
             let category_string = record[2].to_string();
+
+            let event: Event;
+            let category = Category::from_str(&category_string);
+
+            // Check if the date string starts with a letter:
+            let is_rule_based = date_string.chars().next().unwrap().is_alphabetic();
+            if is_rule_based {
+                event = Event::new_rule_based(
+                    Rule::parse(&date_string).unwrap(), 
+                    description, 
+                    category);
+                if filter.accepts(&event) {
+                    events.push(event);
+                }
+                continue;
+            }
 
             let is_yearless = date_string.starts_with("--");
             if is_yearless {
@@ -50,12 +66,10 @@ impl EventProvider for CSVFileProvider {
                         event = Event::new_annual(
                             MonthDay::new(date.month(), date.day()),
                             description.clone(),
-                            category);
+                            category,
+                        );
                     } else {
-                        event = Event::new_singular( 
-                            date, 
-                            description.clone(), 
-                            category);
+                        event = Event::new_singular(date, description.clone(), category);
                     }
 
                     if filter.accepts(&event) {

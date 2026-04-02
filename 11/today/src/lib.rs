@@ -3,22 +3,19 @@ use std::path::Path;
 
 pub mod birthday;
 pub mod events;
-pub mod providers;
 pub mod filters;
+pub mod providers;
 
 use birthday::handle_birthday;
 use chrono::{Datelike, Local, NaiveDate};
 use serde::Deserialize;
 
+use crate::filters::EventFilter;
+use crate::providers::{
+    csvfile::CSVFileProvider, sqlite::SQLiteProvider, textfile::TextFileProvider, web::WebProvider,
+};
 use events::{Category, Event, MonthDay};
 use providers::{EventProvider, SimpleProvider};
-use crate::providers::{
-    csvfile::CSVFileProvider,
-    textfile::TextFileProvider,
-    sqlite::SQLiteProvider,
-    web::WebProvider
-};
-use crate::filters::EventFilter;
 
 #[derive(Deserialize, Debug)]
 pub struct ProviderConfig {
@@ -29,32 +26,32 @@ pub struct ProviderConfig {
 
 #[derive(Deserialize, Debug)]
 pub struct Config {
-    pub providers: Vec::<ProviderConfig>,
+    pub providers: Vec<ProviderConfig>,
 }
 
-fn create_providers(config: &Config, config_path: &Path) -> Vec::<Box<dyn EventProvider>> {
+fn create_providers(config: &Config, config_path: &Path) -> Vec<Box<dyn EventProvider>> {
     // Try to create all the event providers specified in `config`.
     // Put them in a vector of trait objects.
-    let mut providers: Vec::<Box<dyn EventProvider>> = Vec::new();
+    let mut providers: Vec<Box<dyn EventProvider>> = Vec::new();
     for cfg in config.providers.iter() {
         let path = config_path.join(&cfg.resource);
         match cfg.kind.as_str() {
             "text" => {
                 let provider = TextFileProvider::new(&cfg.name, &path);
                 providers.push(Box::new(provider));
-            },
+            }
             "csv" => {
                 let provider = CSVFileProvider::new(&cfg.name, &path);
                 providers.push(Box::new(provider));
-            },
+            }
             "sqlite" => {
                 let provider = SQLiteProvider::new(&cfg.name, &path);
                 providers.push(Box::new(provider));
-            },
+            }
             "web" => {
                 let provider = WebProvider::new(&cfg.name, &cfg.resource);
                 providers.push(Box::new(provider));
-            },
+            }
             _ => {
                 eprintln!("Unable to make provider: {:?}", cfg);
             }
@@ -67,7 +64,11 @@ fn create_providers(config: &Config, config_path: &Path) -> Vec::<Box<dyn EventP
     providers
 }
 
-pub fn run(config: &Config, config_path: &Path, filter: &EventFilter) -> Result<(), Box<dyn Error>> {
+pub fn run(
+    config: &Config,
+    config_path: &Path,
+    filter: &EventFilter,
+) -> Result<(), Box<dyn Error>> {
     handle_birthday();
 
     let mut events: Vec<Event> = Vec::new();
@@ -82,9 +83,10 @@ pub fn run(config: &Config, config_path: &Path, filter: &EventFilter) -> Result<
         provider.get_events(&filter, &mut events);
         let new_count = events.len();
         println!(
-            "Got {} events from provider '{}'", 
+            "Got {} events from provider '{}'",
             new_count - count,
-            provider.name());
+            provider.name()
+        );
         count = new_count;
     }
 

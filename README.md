@@ -96,3 +96,8 @@ suodatin, mahdollisesti kuitenkin jollain muulla tavalla kuin tässä esitetyll�
 Lisättiin komentoriviparametrien käsittely käyttäen clap-pakkausta.
 Kehittelyt löytyvät hakemistosta `10`. Kotitehtävässä 10 lisätään
 komentoriviparametrit.
+
+## 11 Uuden tyyppisiä tapahtumia
+
+Lisättiin vuosittain toistuvat tapahtumat sekä säännön perusteella
+mahdollisesti eri päiville osuvat tapahtumat.

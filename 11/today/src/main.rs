@@ -1,12 +1,12 @@
-use std::path::PathBuf;
-use std::fs;
-use dirs;
-use clap::Parser;
 use chrono::{Datelike, Local, NaiveDate};
+use clap::Parser;
+use dirs;
+use std::fs;
+use std::path::PathBuf;
 
-use today::{run, Config};
+use today::events::{Category, Event, MonthDay};
 use today::filters::FilterBuilder;
-use today::events::{Event, Category, MonthDay};
+use today::{Config, run};
 
 #[derive(Parser)]
 #[command(name = "today")]
@@ -20,14 +20,12 @@ fn main() {
 
     let month_day = if let Some(md) = args.date {
         MonthDay::from_str(&md)
-    } else { 
+    } else {
         let today: NaiveDate = Local::now().date_naive();
         MonthDay::new(today.month(), today.day())
     };
 
-    let filter = FilterBuilder::new()
-        .month_day(month_day)
-        .build();
+    let filter = FilterBuilder::new().month_day(month_day).build();
 
     const APP_NAME: &str = "today";
     let config_path = get_config_path(APP_NAME);
@@ -37,12 +35,12 @@ fn main() {
             println!("Looking for configuration file '{}'", &toml_path.display());
             let config_str = fs::read_to_string(toml_path).expect("existing configuration file");
             let config: Config = toml::from_str(&config_str).expect("valid configuration file");
-            println!("config: {:#?}", config);           
+            println!("config: {:#?}", config);
             if let Err(e) = today::run(&config, &path, &filter) {
                 eprintln!("Error running program: {}", e);
                 return;
             }
-        },
+        }
         None => {
             eprintln!("Unable to configure the application");
             return;

@@ -3,9 +3,9 @@ use chrono::{Local, NaiveDate};
 
 use crate::filters::EventFilter;
 
-pub mod textfile;
 pub mod csvfile;
 pub mod sqlite;
+pub mod textfile;
 pub mod web;
 
 pub trait EventProvider {
