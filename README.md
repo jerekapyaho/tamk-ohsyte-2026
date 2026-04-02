@@ -90,3 +90,9 @@ sen tekemiseen.
 
 Kehittelyt löytyvät hakemistosta `09`. Kotitehtävässä 9 toteutetaan
 suodatin, mahdollisesti kuitenkin jollain muulla tavalla kuin tässä esitetyllä.
+
+## 10 Komentoriviparametrit
+
+Lisättiin komentoriviparametrien käsittely käyttäen clap-pakkausta.
+Kehittelyt löytyvät hakemistosta `10`. Kotitehtävässä 10 lisätään
+komentoriviparametrit.
