@@ -6,6 +6,7 @@ use serde_json;
 use crate::events::MonthDay;
 use crate::filters::EventFilter;
 use crate::{Category, Event, EventProvider};
+use crate::providers::EventProviderError;
 
 pub struct WebProvider {
     name: String,
@@ -58,4 +59,10 @@ impl EventProvider for WebProvider {
             events.push(event);
         }
     }
+
+    fn add_event(&self, _event: &Event) -> Result<(), EventProviderError> {
+        Err(EventProviderError::OperationNotSupported)
+    }
+
+    fn kind(&self) -> String { String::from("web") }
 }

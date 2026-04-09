@@ -29,7 +29,7 @@ pub struct Config {
     pub providers: Vec<ProviderConfig>,
 }
 
-fn create_providers(config: &Config, config_path: &Path) -> Vec<Box<dyn EventProvider>> {
+pub fn create_providers(config: &Config, config_path: &Path) -> Vec<Box<dyn EventProvider>> {
     // Try to create all the event providers specified in `config`.
     // Put them in a vector of trait objects.
     let mut providers: Vec<Box<dyn EventProvider>> = Vec::new();
@@ -97,4 +97,30 @@ pub fn run(
     }
 
     Ok(())
+}
+
+pub fn add_event(config: &Config, config_path: &Path, provider_name: &str, event: &Event) {
+    let providers = create_providers(config, config_path);
+
+    // Find provider by name
+    let mut provider: Option<&dyn EventProvider> = None;
+    for p in &providers {
+        if p.name() == provider_name {
+            provider = Some(p.as_ref());
+            break;
+        }
+    }
+
+    match provider {
+        Some(p) => {
+            if p.is_add_supported() {
+                let _ = p.add_event(event);
+            } else {
+                eprintln!("Adding events is not supported for provider '{}'", p.name());
+            }
+        },
+        None => {
+            eprintln!("Unknown event provider '{}'", provider_name);
+        }
+    }
 }

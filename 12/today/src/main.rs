@@ -7,12 +7,27 @@ use dirs;
 
 use today::events::{Category, Event, MonthDay};
 use today::filters::FilterBuilder;
-use today::{Config, run};
+use today::{Config, run, add_event, create_providers};
 
 #[derive(Subcommand, Debug, Clone)]
 enum Command {
     /// List all event providers
     Providers,
+
+    /// Adds an event to an event provider
+    Add {
+        #[arg(short, long, help = "Name of event provider")]
+        provider_name: String,
+
+        #[arg(short, long, help = "Date of event (YYYY-MM-DD)")]
+        date: String,
+
+        #[arg(short = 'e', long, help = "Description of event")]
+        description: String,
+
+        #[arg(short, long, help = "Category of event (primary[/secondary]")]
+        category: String,
+    }
 }
 
 #[derive(Parser)]
@@ -49,12 +64,24 @@ fn main() {
 
             match args.cmd {
                 Some(Command::Providers) => {
-                    for provider in config.providers {
-                        println!("{}\t{}", provider.name, provider.kind);
+                    let providers = create_providers(&config, &path);
+                    for provider in providers {
+                        println!("{} {} {}", 
+                            provider.name(),
+                            provider.kind(),
+                            if provider.is_add_supported() { "*" } else { "" }
+                        );
                     }
                 },
+                Some(Command::Add { provider_name, date, description, category }) => {
+                    let category = Category::from_str(&category);
+                    let date = chrono::NaiveDate::parse_from_str(&date, "%Y-%m-%d").unwrap();
+                    let event = Event::new_singular(date, description, category);
+
+                    add_event(&config, &path, &provider_name, &event);
+                }
                 None => {
-                    if let Err(e) = today::run(&config, &path, &filter) {
+                    if let Err(e) = run(&config, &path, &filter) {
                         eprintln!("Error running program: {}", e);
                         return;
                     }

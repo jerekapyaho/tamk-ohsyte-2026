@@ -11,6 +11,14 @@ pub mod web;
 pub trait EventProvider {
     fn name(&self) -> String;
     fn get_events(&self, filter: &EventFilter, events: &mut Vec<Event>);
+    fn is_add_supported(&self) -> bool { false }
+    fn add_event(&self, event: &Event) -> Result<(), EventProviderError>;
+    fn kind(&self) -> String;
+}
+
+pub enum EventProviderError {
+    OperationNotSupported,
+    OperationFailed,
 }
 
 pub struct SimpleProvider {
@@ -47,4 +55,10 @@ impl EventProvider for SimpleProvider {
         );
         events.push(test_event_2);
     }
+
+    fn add_event(&self, _event: &Event) -> Result<(), EventProviderError> {
+        Err(EventProviderError::OperationNotSupported)
+    }
+
+    fn kind(&self) -> String { String::from("simple") }
 }

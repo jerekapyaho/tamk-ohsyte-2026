@@ -5,6 +5,7 @@ use std::path::{Path, PathBuf};
 
 use crate::filters::EventFilter;
 use crate::{Category, Event, EventProvider};
+use crate::providers::EventProviderError;
 
 pub struct SQLiteProvider {
     name: String,
@@ -63,4 +64,10 @@ impl EventProvider for SQLiteProvider {
             ));
         }
     }
+
+    fn add_event(&self, _event: &Event) -> Result<(), EventProviderError> {
+        Err(EventProviderError::OperationNotSupported)
+    }
+
+    fn kind(&self) -> String { String::from("SQLite") }
 }

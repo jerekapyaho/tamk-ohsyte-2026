@@ -8,6 +8,7 @@ use chrono::{Datelike, Local, NaiveDate};
 use crate::EventProvider;
 use crate::events::{Category, Event, EventKind, MonthDay, Rule};
 use crate::filters::EventFilter;
+use crate::providers::EventProviderError;
 
 enum ReadingState {
     Date,
@@ -124,4 +125,34 @@ impl EventProvider for TextFileProvider {
             }
         }
     }
+
+    fn is_add_supported(&self) -> bool { true }
+
+    fn add_event(&self, event: &Event) -> Result<(), super::EventProviderError> {
+        if !self.is_add_supported() {
+            return Err(super::EventProviderError::OperationNotSupported);
+        }
+
+        let file = OpenOptions::new()
+            .append(true)
+            .open(self.path.clone())
+            .expect("path to text file for writing");
+
+        let mut writer = BufWriter::new(file);
+
+        let result = match event.kind {
+            EventKind::Singular(date) => {
+                writeln!(writer, "{}", date.to_string());
+                writeln!(writer, "{}", event.description());
+                writeln!(writer, "{}", event.category());
+                writeln!(writer, "");
+                Ok(())
+            },
+            _ => Err(EventProviderError::OperationNotSupported)
+        };
+
+        result
+    }
+
+    fn kind(&self) -> String { String::from("text") }
 }
