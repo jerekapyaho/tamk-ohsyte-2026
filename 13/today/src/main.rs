@@ -4,6 +4,7 @@ use std::path::PathBuf;
 use chrono::{Datelike, Local, NaiveDate};
 use clap::{Parser, Subcommand};
 use dirs;
+use log;
 
 use today::events::{Category, Event, MonthDay};
 use today::filters::FilterBuilder;
@@ -41,6 +42,8 @@ struct Args {
 }
 
 fn main() {
+    env_logger::init();
+
     let args = Args::parse();
 
     let month_day = if let Some(md) = args.date {
@@ -49,6 +52,7 @@ fn main() {
         let today: NaiveDate = Local::now().date_naive();
         MonthDay::new(today.month(), today.day())
     };
+    log::debug!("month_day = {:#?}", month_day);
 
     let filter = FilterBuilder::new()
         .month_day(month_day)
@@ -60,7 +64,7 @@ fn main() {
     match config_path {
         Some(path) => {
             let toml_path = path.join(format!("{}.toml", APP_NAME));
-            println!("Looking for configuration file '{}'", &toml_path.display());
+            log::info!("Looking for configuration file '{}'", &toml_path.display());
             let config_str = fs::read_to_string(toml_path).expect("existing configuration file");
             let config: Config = toml::from_str(&config_str).expect("valid configuration file");
             //println!("config: {:#?}", config);
@@ -105,21 +109,21 @@ fn main() {
 // or None if the directory can't be created.
 fn get_config_path(app_name: &str) -> Option<PathBuf> {
     if let Some(config_dir) = dirs::config_dir() {
-        println!("Config directory: '{}'", config_dir.display());
+        log::info!("Config directory: '{}'", config_dir.display());
 
         // Check if our config directory exists
         let config_path = config_dir.join(app_name);
-        print!("App config directory: '{}'", config_path.display());
+        log::info!("App config directory: '{}'", config_path.display());
 
         if !config_path.exists() {
             if let Err(_) = fs::create_dir(&config_path) {
-                eprintln!("Unable to create config directory for {}", app_name);
+                log::error!("Unable to create config directory for {}", app_name);
                 return None;
             } else {
-                print!(" - created");
+                log::info!("Config directory created");
             }
         } else {
-            print!(" - exists");
+            log::info!("Config directory already exists");
         }
         println!();
 
